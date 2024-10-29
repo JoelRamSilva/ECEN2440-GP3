@@ -1,1 +1,12 @@
+led on code
+import machine
+from machine import Pin
 
+Led1 = Pin(10, Pin.OUT)
+Led2 = Pin(11, Pin.OUT)
+Led3 = Pin(12, Pin.OUT)
+
+while(1):
+    Led1.value(1)
+    Led2.value(1)
+    Led3.value(1)

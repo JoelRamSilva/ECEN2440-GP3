@@ -16,3 +16,7 @@ if __name__ == "__main__":
       transmitter.transmit(device_addr,command)
       print("COMMANDS",hex(command),"TRANSMITTED.")
       time.sleep(3)
+
+
+
+-------- CODE FOR THE RECEIVER ------------

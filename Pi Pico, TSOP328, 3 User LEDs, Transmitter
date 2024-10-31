@@ -20,3 +20,50 @@ if __name__ == "__main__":
 
 
 -------- CODE FOR THE RECEIVER ------------
+
+from machine import Pin, PWM 
+import ir_rx
+import math, time
+import machine
+from time import sleep 
+from ir_rx.nec import NEC_8
+from ir_rx.print_error import print_error
+
+#   Pico pin GP13   -> AIN2
+#   Pico pin GP12   -> AIN1
+#   any Pico GND    -> GND
+
+# load the MicroPython pulse-width-modulation module for driving hardware
+from machine import PWM
+
+from machine import Pin
+
+time.sleep(1) # Wait for USB to become ready
+
+
+pwm_rate = 2000
+ain1_ph = Pin(12, Pin.OUT) # Initialize GP14 as an OUTPUT
+ain2_en = PWM(13, freq = pwm_rate, duty_u16 = 0)
+pwm = PWM(Pin(18)) # Set the pin for the PWM object pwm.freq(60) # Set the frequency of the PWM signal 
+
+pwm = min(max(int(2**16 * abs(1)), 0), 65535)
+
+def ir_callback(data, addr, _):
+    print("Received NEC command! Data: 0x{data}, Addr: 0x{addr}")
+    if data == 0x02:
+        print("Motor ON") # Print to REPL
+        ain1_ph.low()
+        ain2_en.duty_u16(pwm)
+    elif data == 0x01:
+        print("Motor OFF") # Print to REPL
+        ain1_ph.low()
+        ain2_en.duty_u16(0)
+
+ir_pin = Pin(17, Pin.IN, Pin.PULL_UP)
+
+ir_receiver = NEC_8(ir_pin, callback=ir_callback)
+
+ir_receiver.error_function(print_error)
+
+while True:
+    pass
